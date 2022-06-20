@@ -31,6 +31,8 @@ SECRET_KEY = 'django-insecure-(=*ys@)d5f0mlce_@t$jx(tjkb9)w$s_tc^8(=fo16@6+w7ioh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = [
+    'www.nonewmusic.xyz',
+    '.nonewmusic.xyz',
     '127.0.0.1',
     '.vercel.app',
     '.now.sh'
