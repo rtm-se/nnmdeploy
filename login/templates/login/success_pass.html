@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Password changed!</h1>
+    <a href="{% url 'profile:profile' request.user.id %}">go back</a>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>SUCCcess</h1>
+    albums recorde: <br>
+    {% for album in album %}
+    {{album.album.name}}<br>
+    {% endfor %}
+
+</div>
+{% endblock %}

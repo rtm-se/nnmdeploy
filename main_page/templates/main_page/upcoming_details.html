@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .fit_cover{
+        width: 100%;
+        object-fit: cover
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+        <img src="{{album.cover.url}}" class="fit_cover">
+        </div>
+        <div class="col-md-6">
+            <h3>
+                {% for artist in album.artist_name.all  %}
+                {{artist}}
+                {% endfor %}
+                - {{album.album_name}}
+            </h3> {% if album.days_left > 0 %}{{album.days_left}} days left
+                    {% else %}Album released!
+                    {% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                <button class="btn btn-primary" hx-post='add_wl/' hx-target="#wlcount">Add to WL </button> <div id="wlcount">{{upcoming_index}}</div>
+            </form>
+            <hr>
+            <h4>description</h4>
+            {{album.description}}
+        </div>
+    </div>
+</div>
+  <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+{% endblock %}

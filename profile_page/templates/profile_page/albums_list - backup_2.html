@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://unpkg.com/htmx.org@1.7.0"></script>
+<style>
+  .card-img{
+  overflow: hidden;
+  }
+  .card-img img{
+    transition: all 1.3s ease;
+  }
+  .card-img:hover img{
+    transform: scale(1.2);
+  }
+
+</style>
+
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-2">
+    <form method="post">
+      {% csrf_token %}
+    <button class="btn btn-primary">make a playlist</button>
+      </div>
+      <div class="col-md-1 form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="shuffle" name="shuffle" checked> <label class="form-check-label" for="shuffle" >Shuffle</label>
+      </div>
+    </form>
+      </div>
+
+    </div>
+<div class="row justify-content-md-center" id="albums">
+  {% for album in albums %}
+
+<div class="card text-center" style="width: 18rem;">
+  <div class="card-img">
+  <a href="{% url 'main_page:album_details' album.album.id%}"><img src="{{album.album.cover300}}" class="img-fluid" alt="No_Photo"></a>
+    </div>
+    <div class="card-body">
+    <h5 class="card-title">{{album.album.name}}</h5>
+    <p class="card-text">
+      {% for artist in album.album.artist_name.all %}
+      {{artist}}
+      {% endfor %}
+    </p>
+      {% if page == 'like' and pk == request.user.id  %}
+    <a href="{% url 'profile:make_fav' album.album.id %}" class="btn btn-primary">make it your obsession</a>
+      {% endif %}
+    <a href="{{album.album.link}}" class="btn btn-success">listen on spotify</a>
+  </div>
+</div>
+
+{% endfor %}
+</div>
+</div>
+
+{% endblock %}

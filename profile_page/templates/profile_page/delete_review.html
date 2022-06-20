@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+     <div class="col">
+
+                <div class="card" style="width: 50rem;">
+                <div class="card-body">
+                <h5 class="card-title">{{review.user}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {% if review.recommended == True %}recommends: Yes{% elif review.recommended == False %}recommends:No{% elif review.recommended == None %} {% endif %}
+                </h6>
+                <p class="card-text">{{review.body}}</p>
+
+
+                </div>
+                </div>
+                <form method="POST">
+                {% csrf_token %}
+                <h4>Are you sure you want to delete the review?</h4>
+                    <button class="btn btn-primary" type="submit">Yes</button></form><a href="{% url 'main_page:album_details' review.album.id %}"><button class="btn btn-primary">Go Back</button></a>
+     </div>
+</div>
+{% endblock %}

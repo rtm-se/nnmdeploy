@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+        {{form.as_p}}
+        <button class="btn-primary" type="submit">Save</button>
+        </form>
+    </div>
+    <br>
+    <a href="{% url 'login:pass_change' %}">change password</a><br>
+    <a href="{% url 'profile:delete_page' %}">delete account information</a><br>
+</div>
+{% endblock %}

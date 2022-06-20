@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .fit_cover{
+        width: 100%;
+        object-fit: cover
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{album.cover640}}" class="fit_cover">
+        </div>
+        <div class="col-md-6">
+            {% for artist in album.artist_name.all%}{{artist}} {% endfor %}- {{album}}
+
+            <form method="POST">
+            {% csrf_token %}
+                <button class="btn-primary" hx-post='like_post/' hx-target="#like">like</button> <div id="like">{{likes}} likes</div>
+            </form>
+
+                    <div class="col">
+                {% for review in reviews %}
+                <div class="card" style="width: 50rem;">
+                <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'profile:profile' review.user.id %}">{{review.user}}</a></h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {% if review.recommended == True %}recommends: Yes{% elif review.recommended == False %}recommends:No{% elif review.recommended == None %} {% endif %}
+                </h6>
+                <p class="card-text">{{review.body}}</p>
+                    {% if request.user == review.user %}
+                <a href="{% url 'profile:edit_review' review.id %}" >edit</a>
+                <a href="{% url 'profile:delete_review' review.id %}" >delete</a>
+                    {% endif %}
+                </div>
+                </div>
+                {% endfor %}
+        </div>
+
+        </div>
+
+
+    </div>
+    <div class="row">
+        {% if not form == False %}
+    <div class="col-6">
+        {% if form == Null %}
+        {% else %}
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+
+            <button type="submit" class="btn btn-primary" >post</button>
+        </form>
+        {%endif%}
+    </div>
+            {% else %}
+            <h5>Please listen to the album to leave a review</h5>
+            {% endif %}
+    </div>
+</div>
+<script src="https://unpkg.com/htmx.org@1.7.0"></script>
+{% endblock %}

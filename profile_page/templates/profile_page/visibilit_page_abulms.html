@@ -1,0 +1,32 @@
+  <form method="POST">
+    {% csrf_token %}
+
+      <div class="col md-6">
+          {% for album in albums %}
+            <div class="row bg-light">
+                  <div class="col-md-1">
+                    <img src="{{album.album.cover64}}" class="rounded float-start" style="width: 100%; object-fit: cover">
+                  </div>
+                  <div class="col-md-8">
+                      {{album.album.name}} - {{album.album.visible}}
+                      {% if  album.visible %}
+                          <input type="checkbox" hx-post="{% url 'profile:switch_visibility' page album.id %}" checked>
+                            visibility
+                          </input>
+                            {% else %}
+                            <input type="checkbox" hx-post="{% url 'profile:switch_visibility' page album.id %}">
+                            visibility
+                          </input>
+
+                      {% endif %}
+
+
+
+
+                </div>
+          </div>
+          <br>
+          {% endfor %}
+
+        </div>
+</form>

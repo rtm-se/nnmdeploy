@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    div.text {
+	background: linear-gradient(-45deg, #6355a4, #6355a4, #e89a3e, #e89a3e);
+	background-size: 300%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: 100;
+	font-size: 2vw;
+	letter-spacing: -5px;
+	text-transform: uppercase;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	animation: animated_text 10s ease-in-out infinite;
+	-moz-animation: animated_text 10s ease-in-out infinite;
+	-webkit-animation: animated_text 10s ease-in-out infinite;
+}
+
+@keyframes animated_text {
+	0% { background-position: 0px 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0px 50%; }
+}
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5 justify-content-center">
+            <div class="row">
+                <div class="col text-center">
+                    <h3>{{album.artists}} - {{album}}</h3>
+                </div>
+                <div class="col">
+                    <a href="{{album.link}}" class="btn btn-success">Listen on spotify</a>
+                </div>
+            </div>
+            <img src="{{album.cover300}}" style="width: 100%; object-fit: cover;">
+            <hr>
+            <div>
+                {% if encountered_instance != None %}
+                you listened {{encountered_instance.songs_count}}/{{album.total_tracks}} songs<br>
+                {{encountered_instance.completion}}% completion
+                {% if encountered_instance.completion == 100 %}
+                    <div class="text">!PERFECT!</div>
+                {% endif %}
+                <br>
+                {% for song in songs %}
+                {{song}}<br>
+                {% endfor %}
+                {% else %}
+                You didn't listen to this album yet, press <b>'Listen on spotify'</b> to start!
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-5 ">
+            <form>
+                {% csrf_token %}
+                <div class="row">
+                    {% if album_playlist_check and request.user.is_authenticated %}
+                    <div class="col">
+                        <a class="btn btn-primary" href="{% url 'profile:playlist' %}" >Album in Playlist</a>
+                    </div>
+                    {% elif request.user.is_authenticated %}
+                    <div class="col">
+                        <button class="btn btn-primary" hx-post="{% url 'profile:add_to_playlist' album.id %}" hx-target="this" hx-swap="outerHTML">Add To PlayList</button>
+                    </div>
+                    {% endif %}
+
+                    <div class="col">
+                        <div hx-get="{% url 'profile:render_like' album.id %}" hx-trigger="revealed" hx-swap="outerHTML"></div>
+                    </div>
+                </div>
+            </form>
+            <br>
+            <br>
+                {% if user_review != None %}
+                <div class="card" style="width: 100%;" hx-target="this" hx-swap="outerHTML">
+                <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'profile:profile' user_review.user.id %}">{{user_review.user}}</a></h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {% if user_review.recommended == True %}recommends: Yes{% elif user_review.recommended == False %}recommends: No{% elif user_review.recommended == None %} {% endif %}
+                </h6>
+                <p class="card-text">{{user_review.body}}</p>
+                    <button hx-get="{% url 'profile:edit_review' user_review.id %}" class="btn btn-primary flex">
+                    Click To Edit
+                    </button>
+                          <button hx-post="{% url 'profile:delete_review' user_review.id %}" class="btn btn-primary flex">
+                    Delete
+                    </button>
+                </div>
+
+                </div>
+                {% elif encountered_instance == None or encountered_instance.completion < 80 %}
+                Please listen to the album to leave a review
+                {% else %}
+                    <form hx-post="{% url 'profile:post_review' album.id  %}" hx-target="this" hx-swap="outerHTML">
+                    <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'profile:profile' request.user.id %}">{{request.user.username}}</a></h5>
+                    {{form.as_p}}
+
+                    <input type="submit" class="btn btn-primary flex">
+                    </div>
+
+                    </div>
+                    </form>
+                {% endif %}
+            <br>
+            <div>
+                {% for review in reviews %}
+                <div class="card" style="width: 100%;">
+                <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'profile:profile' review.user.id %}">{{review.user}}</a></h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {% if review.recommended == True %}recommends: Yes{% elif review.recommended == False %}recommends:No{% elif review.recommended == None %} {% endif %}
+                </h6>
+                <p class="card-text">{{review.body}}</p>
+                </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
+<script>
+      document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+      })
+    </script>
+{% endblock %}

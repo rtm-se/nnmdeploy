@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    {% now 'l'  as  current_day %}
+    {% if current_day == 'Friday' %}
+    <div class="row justify-content-center">
+        <div class="col-md-5 text-center">
+
+    {% include 'main_page/nmfridays.html' %}
+        </div>
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+        <h1>Upcoming Releases</h1>
+
+        {% for album in upcoming_albums %}
+            {% ifchanged %}<hr><b>{{album.release_date}}</b><hr>{% endifchanged %}
+                <a href="{% url 'main_page:upcoming_details' album.id %}">{% for artist in album.artist_name.all %} {{artist}} {% endfor %} - {{album}}</a><br>
+        {% endfor %}
+
+        </div>
+        <div class="col-md-6">
+            <h1>New Albums</h1>
+            {% for new_album in new_albums %}
+                {% ifchanged %}<hr><b>{{new_album.release_date}}</b><hr>{% endifchanged %}
+                <a href="{% url 'main_page:album_details' new_album.id %}">{% for artist in new_album.artist_name.all %}
+                {{artist}}
+                    {%endfor%}- {{new_album}}</a><br>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

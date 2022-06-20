@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>total albums added {{total}}</h1>
+    {% for album in albums %}
+    {{ album.album.name }}<br>
+    {% endfor %}
+</div>
+{% endblock %}

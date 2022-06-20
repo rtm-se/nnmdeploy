@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+{% include 'profile_page/que_albums_album_component.html' %}
+
+
+
+<script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
+<script>
+      document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+      })
+    </script>
+{% endblock %}

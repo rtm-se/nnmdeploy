@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% if artists %}
+            <h2>Artists successfully recorded</h2>
+            {% for artist in artists %}
+                <p>{{artist}}</p>
+            {% endfor %}
+        {% else %}
+            <h2> All followed artists from this spotify profile already recorded </h2>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+
+    <div>
+        {% if context_list|length > 0 %}
+               <h3>{{search_name}}</h3>
+            {% if search_name == 'Users' %}
+                {% for user in context_list %}
+                <a href="{% url 'profile:profile' user.id %}">{{user.username}}</a><br>
+                {% endfor %}
+            {% else %}
+                {% for album in context_list %}
+                <a href="{% url 'main_page:album_details' album.id %}">{{album.artists}} - {{album}}</a><br>
+                {% endfor %}
+            {% endif %}
+        {% else %}
+            <h6>No {{search_name}} related search results</h6>
+        {% endif %}
+
+    </div>

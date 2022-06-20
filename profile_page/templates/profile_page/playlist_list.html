@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://unpkg.com/htmx.org@1.7.0"></script>
+<style>
+  .card-img{
+  overflow: hidden;
+  }
+  .card-img img{
+    transition: all 1.3s ease;
+  }
+  .card-img:hover img{
+    transform: scale(1.2);
+  }
+
+  #album_card.htmx-swapping div{
+    opacity: 0;
+    transition: opacity 1s ease-out;
+  }
+
+</style>
+
+<div class="container">
+
+    <form method="post">
+      <div class="row justify-content-center">
+      <div class="col-md-2">
+          {% csrf_token %}
+          <button class="btn btn-primary">make a playlist</button>
+      </div>
+      <div class="col-md-1 form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="shuffle" name="shuffle" checked> <label class="form-check-label" for="shuffle" >Shuffle</label>
+      </div>
+      <div class="col-md-2 form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="wipe" name="wipe" checked> <label class="form-check-label" for="shuffle" >wipe after creation</label>
+      </div>
+      </div>
+    </form>
+
+
+<div class="row justify-content-center" id="albums">
+  {% for album in albums %}
+<div class="card text-center" style="width: 18rem;" hx-target="this" hx-swap="outerHTML swap:0.3s" id="album_card">
+  <div class="card-img">
+  <a href="{% url 'main_page:album_details' album.id%}"><img src="{{album.cover300}}" class="img-fluid" alt="No_Photo"></a>
+    </div>
+    <div class="card-body">
+    <h5 class="card-title">{{album.name}}</h5>
+    <p class="card-text">
+      {{album.artists}}
+
+     </p>
+      <button class="btn btn-danger" hx-get="{% url 'profile:delete_playlist_item' album.id %}">
+          Delete
+        </button>
+    <a href="{{album.album.link}}" class="btn btn-success">listen on spotify</a>
+  </div>
+</div>
+
+{% endfor %}
+</div>
+</div>
+<script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
+{% endblock %}

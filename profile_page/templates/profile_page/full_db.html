@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <form method="post">
+      {% csrf_token %}
+    <button class="btn btn-primary">make a playlist</button>
+      <input type="checkbox" if="shuffle" name="shuffle" checked> <label for="shuffle" >Shuffle</label>
+    </form>
+    </div>
+<div class="row">
+  {% for album in albums %}
+
+<div class="card" style="width: 18rem;">
+  <a href="{% url 'main_page:album_details' album.id%}"><img src="{{album.cover300}}" class="card-img-top" alt="No_Photo"></a>
+  <div class="card-body">
+    <h5 class="card-title">{{album.name}}</h5>
+    <p class="card-text">
+      {% for artist in album.artist_name.all %}
+      {{artist}}
+      {% endfor %}
+    </p>
+    <a href="{{album.link}}" class="btn btn-success">listen on spotify</a>
+  </div>
+</div>
+
+{% endfor %}
+</div>
+</div>
+{% endblock %}

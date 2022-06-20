@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Upcoming Albums</h5>
+            {% for album in upcoming_list %}
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="{{album.upcoming_album.cover.url}}" alt="pic not found" style="width: 100%; object-fit: cover">
+                    </div>
+                    <div class="col-md-10">
+                        <a href="{% url 'main_page:upcoming_details' album.upcoming_album.id %}">
+                            {% for artist in album.upcoming_album.artist_name.all %} {{artist}} {% endfor %} - {{album.upcoming_album}}
+                        </a>
+                        <br>
+                        days till release: {{album.upcoming_album.days_left}}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <h5>Released Albums from youwaiting list</h5>
+            {% for album in released_list %}
+                            <div class="row">
+                    <div class="col-md-2">
+                        <img src="{{album.upcoming_album.cover.url}}" alt="pic not found" style="width: 100%; object-fit: cover">
+                    </div>
+                    <div class="col-md-10">
+                        {% if album.upcoming_album.album != None %}
+                        <a href="{% url 'main_page:album_details' album.upcoming_album.album.id %}">
+                         {% for artist in album.upcoming_album.artist_name.all %} {{artist}} {% endfor %} - {{album.upcoming_album}}
+                        </a>
+                        {% else %}
+                            {% for artist in album.upcoming_album.artist_name.all %} {{artist}} {% endfor %} - {{album.upcoming_album}} - Not Yet On the Site
+                        {% endif %}
+                        {% if request.user == user %}
+                        <br>
+                            <button class="btn-primary" hx-get="{% url 'profile:del_wl_item' album.id %}" hx-swap="outerHTML">delete</button>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        </div>
+
+
+</div>
+<script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
+{% endblock %}

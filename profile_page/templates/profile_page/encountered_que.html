@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    div.text {
+	background: linear-gradient(-45deg, #6355a4, #6355a4, #e89a3e, #e89a3e);
+	background-size: 300%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: 900;
+	font-size: 5vw;
+	letter-spacing: -5px;
+	text-transform: uppercase;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	animation: animated_text 10s ease-in-out infinite;
+	-moz-animation: animated_text 10s ease-in-out infinite;
+	-webkit-animation: animated_text 10s ease-in-out infinite;
+}
+
+@keyframes animated_text {
+	0% { background-position: 0px 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0px 50%; }
+}
+</style>
+
+<div class="container">
+    <div class="row">
+        <h1>Discovery List consits of {{album_count}} albums</h1>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-5 justify-content-center">
+            <div class="row">
+                <div class="col">
+                    <h3>{% for artist in encountered_model.album.artist_name.all %}{{artist}}{% endfor %} - {{encountered_model.album.name}}</h3>
+                    <img src="{{encountered_model.album.cover300}}">
+                </div>
+                <div class="col">
+                    <a href="{{encountered_model.album.link}}" class="btn btn-success">Finish on spotify</a>
+                </div>
+            </div>
+            <hr>
+            <div>
+                you listened {{songs|length}}/{{encountered_model.album.total_tracks}} songs<br>
+                {{percentage}}% competion
+                {% if songs|length == encountered_model.album.total_tracks %}
+                    <div class="text">!PERFECT!</div>
+                {% endif %}
+                <br>
+                {% for song in songs %}
+                {{song}}<br>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-5 ">
+            <form>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <button>Add To Listened</button>
+                    </div>
+                    <div class="col">
+                        <button>like</button>
+                    </div>
+                    <div class="col">
+                        <button>Not Interrested</button>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                {{form.as_p}}
+            </div>
+        </div>
+
+        <div class="col-md-2 justify-content-center">
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="next" value="{{encountered_model.id}}">next</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

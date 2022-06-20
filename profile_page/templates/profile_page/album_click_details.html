@@ -1,0 +1,6 @@
+        <div class="card-img-overlay mask" style="background-color: rgba(0, 0, 0, 0.6)" hx-trigger="click" hx-get="{% url 'profile:get_enc_album_info'  0 %}" hx-target="this" hx-swap="outerHTML">
+            <p class="card-text ">{{album.album.artists}}</p>
+            <p class="card-text ">{{album.album}}</p>
+            <p class="card-text"><small>{{album.completion}}% Completion</small></p>
+            <a href="{% url 'main_page:album_details' album.album.id %}" class="link-light">More</a>
+        </div>

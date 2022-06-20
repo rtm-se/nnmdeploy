@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://unpkg.com/htmx.org@1.7.0"></script>
+
+
+<div class="container-fluid">
+    <br>
+     <form method="POST" action="{% url 'profile:show_albums_list' page pk %}" >
+        <div class="row justify-content-md-center">
+            {% if page == 'recommendation' or page == 'all_albums' %}
+            {% else %}
+            <div class="col-md-auto">
+                {% if request.user.is_authenticated and request.user.id == pk %}
+                <a class="btn btn btn-outline-secondary" href="{% url 'profile:visibility' page %}">visibility</a>
+                {% endif %}
+            </div>
+            <div class="col-md-auto"></div>
+            {% endif %}
+            <div class="col-md-auto">
+                 {% csrf_token %}
+                 <button class="btn btn-primary">make a playlist</button>
+            </div>
+            <div class="col-md-auto form-check form-switch">
+                 <input class="form-check-input" type="checkbox" role="switch" id="shuffle" name="shuffle" checked> <label class="form-check-label" for="shuffle" >Shuffle</label>
+            </div>
+            <div class="col-md-auto form-check form-switch">
+                {% if page == 'new' %}
+                <select class="form-select" aria-label="album_select" name="select_value" hx-get="{% url 'profile:show_albums_list' page pk %}" hx-target="#albums_list" hx-swap="innerHTML" hx-swap-oob="true">
+                  <option value="All">All Albums</option>
+                  <option value="100">Completed Albums</option>
+                  <option value="99">Uncompleted Albums</option>
+                </select>
+                {% endif %}
+            </div>
+         </div>
+    </form>
+
+    <br>
+    <div id="albums_list">
+        <div hx-get="{% url 'profile:show_albums_list' page pk %}" hx-target="#albums_list" hx-swap="innerHTML" hx-swap-oob="true" hx-trigger="load"></div>
+    </div>
+</div>
+
+{% endblock %}

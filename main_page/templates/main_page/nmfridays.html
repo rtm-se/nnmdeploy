@@ -1,0 +1,41 @@
+{% load static %}
+<h3>NEW ALBUMS RELEASED TODAY!</h3>
+<h3>{% now 'l , F d'  %}</h3>
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'images/NMF.png' %}" class="d-block w-100" alt="...">
+    </div>
+      {% for album in upcoming_albums_today %}
+          {% if album.album != None %}
+
+            <div class="carousel-item">
+            <img src="{{album.album.cover300}}" class="d-block w-100" alt="NO PICTURE">
+            <div class="carousel-caption d-md-block bg-secondary text-white">
+            <a href="{% url 'main_page:album_details' album.album.id %}" class="link-light">
+            <h5>{% for artist in album.artist_name.all %}{{artist}} {% endfor %}- {{album.album_name}}</h5>
+            </a>
+            </div>
+            </div>
+
+          {% else %}
+    <div class="carousel-item">
+       <img src="{{album.cover.url}}" class="d-block w-100" alt="NO PICTURE">
+        <div class="carousel-caption d-md-block bg-secondary text-white">
+          <a href="{% url 'main_page:upcoming_details' album.id %}" class="link-light">
+          <h5>{% for artist in album.artist_name.all %}{{artist}} {% endfor %}- {{album.album_name}}</h5>
+          </a>
+      </div>
+    </div>
+        {% endif %}
+        {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>

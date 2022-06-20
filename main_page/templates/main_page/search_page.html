@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container text-center">
+    <h1>Search Results for "{{q}}"</h1>
+        <div class="row justify-content-md-center">
+            <form method="POST">
+                {% csrf_token %}
+            <div class="col-auto">
+                <button class="btn-primary" hx-post="{% url 'main_page:search_albums' q %}" hx-target="#search_results">Albums</button>
+
+                <button class="btn-primary" hx-post="{% url 'main_page:search_upcoming' q %}" hx-target="#search_results">Upcoming</button>
+
+                <button class="btn-primary" hx-post="{% url 'main_page:search_artists' q %}" hx-target="#search_results">Artists</button>
+
+                <button class="btn-primary" hx-post="{% url 'main_page:search_users' q %}" hx-target="#search_results">Users</button>
+
+            </div>
+            </form>
+        </div>
+    <div class="row" id="search_results">
+    <div>
+        {% if albums|length > 0 %}
+            <h3>ALBUMS</h3>
+        {% for album in albums %}
+        <a href="{% url 'main_page:album_details' album.id %}">{{album.artists}} - {{album}}</a><br>
+        {% endfor %}
+        {% else %}
+        <h6>No albums related search results</h6>
+        {% endif %}
+    </div>
+    <hr>
+    <div>
+        {% if upcoming|length > 0 %}
+            <h3>UPCOMING</h3>
+        {% for album in upcoming %}
+        <a href="{% url 'main_page:album_details' album.id %}">{{album.artists}} - {{album}}</a><br>
+        {% endfor %}
+        {% else %}
+        <h6>No upcoming albums related search results</h6>
+        {% endif %}
+    </div>
+    <hr>
+    <div>
+        {% if artists|length > 0 %}
+            <h3>ARTISTS</h3>
+        {% for artist in artists %}
+        <a href="{% url 'main_page:album_details' artist.id %}">{{artist.artists}} - {{artist}}</a><br>
+        {% endfor %}
+        {% else %}
+        <h6>No artists related search results</h6>
+        {% endif %}
+    </div>
+    <hr>
+        <div>
+        {% if users|length > 0 %}
+            <h3>USERS</h3>
+        {% for user in users %}
+        <a href="{% url 'profile:profile' user.id %}">{{user.username}}</a><br>
+        {% endfor %}
+        {% else %}
+        <h6>No users related search results</h6>
+        {% endif %}
+    </div>
+    </div>
+</div>
+<script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
+{% endblock %}

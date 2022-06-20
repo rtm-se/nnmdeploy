@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <a href="{% url 'profile:albums_liked' profile.user.id %}">likes</a><br>
+            <a href="{% url 'profile:albums_listened' profile.user.id %}">encountered albums</a><br>
+            <a href="{% url 'profile:songs_listened' profile.user.id %}">lastfm</a><br>
+            <a href="{% url 'profile:all_reviews' profile.user.id %}">reviews</a><br>
+            <a href="{% url 'profile:wl' profile.user.id %}">waiting list</a><br>
+            <br>
+            {% if profile.user == request.user %}
+            <a href="{% url 'profile:playlist' %}">playlist list</a><br>
+            <a href="{% url 'profile:no_review_section' 0 %}">albums to review queue</a><br>
+            <a href="{% url 'spotify:recommendations'%}">recommendations</a><br>
+            <a href="{% url 'profile:encountered_que' 0 %}">encountered_que</a><br>
+            <br>
+
+            <button class="btn btn-primary" type="button" hx-get="{% url 'spotify:grab_tha_link'%}" hx-target="this" hx-trigger='click' hx-indicator='#loading_data' >
+                Sync Your Spotify Data
+            </button><b class="htmx-indicator" id="loading_data">
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            </b>
+            <br>
+            <a href="{% url 'profile:connections'%}">account connections</a><br>
+            <br>
+            <br>
+            test features<br>
+            <a href="{% url 'spotify:rip_likes' %}">rip likes</a><br>
+            <a href="{% url 'spotify:rip_albums' %}">rip albums</a><br>
+            <br>
+            <a href="{% url 'spotify:record_likes' %}">record likes!!!CHANGE SPOTIFY USER BEFORE!!</a><br>
+            <br>
+            <a href="{% url 'spotify:put_albums' %}">record albums!!!CHANGE SPOTIFY USER BEFORE!!</a><br>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <img src="{{profile.pfp.url}}" style="width: 100%; object-fit: cover;">
+            <br>
+            {% if profile.favorite_album != Null %}
+            <div>
+                <h5>favorite album:</h5><br>
+                <img src="{{profile.favorite_album.cover64}}">
+                {% for artist in profile.favorite_album.artist_name.all %}{{artist}}{% endfor %} - {{profile.favorite_album}}
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            {{profile.bio}}
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
+{% endblock %}

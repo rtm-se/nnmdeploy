@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+  {% for album in albums %}
+
+<div class="card" style="width: 18rem;">
+  <a href="{% url 'main_page:album_details' album.album.id%}"><div class="bg-image hover-zoom"><img src="{{album.album.cover300}}" class="card-img-top" alt="No_Photo"></div></a>
+  <div class="card-body">
+    <h5 class="card-title">{{album.album.name}}</h5>
+    <p class="card-text">
+      {% for artist in album.album.artist_name.all %}
+      {{artist}}
+      {% endfor %}
+    </p>
+    <a href="{{album.album.link}}" class="btn btn-success">listen on spotify</a>
+  </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}

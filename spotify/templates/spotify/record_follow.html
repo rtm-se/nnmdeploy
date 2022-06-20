@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% if success %}
+            <h2> Artists followed successfully </h2>
+        {% else %}
+            <h2> Recording of followed artists failed </h2>
+        {% endif %}
+        <a class="btn btn-primary" href="{% url 'profile:profile' request.user.id %}">Go Back</a>
+    </div>
+</div>
+{% endblock %}

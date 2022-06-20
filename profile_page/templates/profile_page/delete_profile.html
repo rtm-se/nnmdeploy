@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% if page == 'confirmation' %}
+        <div class="col justify-content-center">
+            <p>
+                Are you sure you want to delete your profile?
+                {{request.user.username}}
+                <form method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Confirm</button>
+                <a class="btn btn-primary" href="{% url 'main_page:home' %}" >Cancel</a>
+                </form>
+            </p>
+        </div>
+        {% else %}
+            <div class="col justify-content-center">
+                <p>
+                    Profile Deleted!
+                    <a class="btn btn-primary" href="{% url 'main_page:home' %}" >Main Page</a>
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
