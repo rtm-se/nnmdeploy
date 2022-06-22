@@ -3,19 +3,19 @@ from . import models
 # Register your models here.
 
 class AlbumModelAdmin(admin.ModelAdmin):
-    list_display = ('id', 'artists', 'name')
-    search_fields = ('id', 'name')
+    list_display = ('id', 'artists', 'name', 'spotify_id')
+    search_fields = ('id', 'name', 'spotify_id')
 
 
 class ArtistModelAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
-    search_fields = ('id', 'name')
+    list_display = ('id', 'name', 'spotify_id')
+    search_fields = ('id', 'name', 'spotify_id')
 
 
 class SongModelAdmin(admin.ModelAdmin):
-    list_display = ('id', 'artists', 'album', 'name', 'track_number')
+    list_display = ('id', 'artists', 'album', 'name', 'track_number', 'spotify_id')
     list_display_links = ('id', 'name')
-    search_fields = ('id', 'name')
+    search_fields = ('id', 'name', 'spotify_id')
 
 
 class UpcomingAlbumEntryModelAdmin(admin.ModelAdmin):

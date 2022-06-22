@@ -32,7 +32,7 @@ class SpotifyDataHandler:
             else:
 
                 if ArtistModel.objects.filter(spotify_id=artist_spotify_id).exists():
-                    artist = ArtistModel.objects.filter(spotify_id=artist_spotify_id).only('id', 'spotify_id')[0]
+                    artist = ArtistModel.objects.get(spotify_id=artist_spotify_id)
 
                     SpotifyDataHandler.artists.update({
                         artist_spotify_id: {
@@ -56,8 +56,8 @@ class SpotifyDataHandler:
                 pass
                 #album = SpotifyDataHandler.albums[album_spotify_id]['obj']
             else:
-                if AlbumModel.objects.filter(link=f'https://open.spotify.com/album/{album_spotify_id}').exists():
-                    album = AlbumModel.objects.filter(link=f'https://open.spotify.com/album/{album_spotify_id}').only('id', 'link')[0]
+                if AlbumModel.objects.filter(spotify_id=album_spotify_id).exists():
+                    album = AlbumModel.objects.get(spotify_id=album_spotify_id)
                     SpotifyDataHandler.albums.update({
                         album_spotify_id: {
                             'obj': album,
@@ -81,7 +81,7 @@ class SpotifyDataHandler:
             else:
                 # Checking if the song with spotify exists in the db
                 if SongModel.objects.filter(spotify_id=song_spotify_id).exists():
-                    song = SongModel.objects.filter(spotify_id=song_spotify_id).only('id', 'spotify_id')[0]
+                    song = SongModel.objects.get(spotify_id=song_spotify_id)
                     SpotifyDataHandler.songs.update({
                         song_spotify_id: {
                             'obj': song,
