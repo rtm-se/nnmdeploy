@@ -55,23 +55,24 @@
         </div>
 
         <div class="col-md-4 offset-md-1">
-            <h5>Test Features</h5><br>
-            <a class="link-dark text-decoration-none" href="{% url 'spotify:rip_likes' %}">rip likes</a><br>
-            <a class="link-dark text-decoration-none" href="{% url 'spotify:get_saved_songs' %}">new rip likes</a><br>
+            {% if  request.user == profile.user and user.is_staff %}
+                <h5>Test Features</h5><br>
+                <a class="link-dark text-decoration-none" href="{% url 'spotify:rip_likes' %}">rip likes</a><br>
+                <a class="link-dark text-decoration-none" href="{% url 'spotify:get_saved_songs' %}">new rip likes</a><br>
 
-            <a class="link-dark text-decoration-none" href="{% url 'spotify:rip_albums' %}">rip albums</a><br>
-            <a class="link-dark text-decoration-none" href="{% url 'spotify:rip_followed' %}">rip artists</a><br>
-            <br>
-            <p class="text-danger">!!CHANGE SPOTIFY USER BEFORE!!</p>
-            <a class="link-dark text-decoration-none" href="{% url 'spotify:record_likes' %}">record likes</a><br>
-            <br>
-            <a class="link-dark text-decoration-none" href="{% url 'spotify:put_albums' %}">record albums</a><br>
-            <br>
-            <a class="link-dark text-decoration-none" href="{% url 'spotify:record_followed_view' %}">record artists</a><br>
-            <br>
-            <br>
-            <a class="link-dark text-decoration-none" href="{% url 'spotify:display_likes' %}"> saved tracks </a><br>
-
+                <a class="link-dark text-decoration-none" href="{% url 'spotify:rip_albums' %}">rip albums</a><br>
+                <a class="link-dark text-decoration-none" href="{% url 'spotify:rip_followed' %}">rip artists</a><br>
+                <br>
+                <p class="text-danger">!!CHANGE SPOTIFY USER BEFORE!!</p>
+                <a class="link-dark text-decoration-none" href="{% url 'spotify:record_likes' %}">record likes</a><br>
+                <br>
+                <a class="link-dark text-decoration-none" href="{% url 'spotify:put_albums' %}">record albums</a><br>
+                <br>
+                <a class="link-dark text-decoration-none" href="{% url 'spotify:record_followed_view' %}">record artists</a><br>
+                <br>
+                <br>
+                <a class="link-dark text-decoration-none" href="{% url 'spotify:display_likes' %}"> saved tracks </a><br>
+            {% endif %}
         </div>
     </div>
 <script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>

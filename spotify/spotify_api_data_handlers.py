@@ -27,11 +27,12 @@ class SpotifyDataHandler:
         def find_or_create_artist(self, artist_data: dict):
             artist_spotify_id = artist_data['id']
             if artist_spotify_id in SpotifyDataHandler.artists:
-                artist = SpotifyDataHandler.artists[artist_spotify_id]['obj']
+                pass
+                #artist = SpotifyDataHandler.artists[artist_spotify_id]['obj']
             else:
 
                 if ArtistModel.objects.filter(spotify_id=artist_spotify_id).exists():
-                    artist = ArtistModel.objects.get(spotify_id=artist_spotify_id)
+                    artist = ArtistModel.objects.filter(spotify_id=artist_spotify_id).only('id', 'spotify_id')[0]
 
                     SpotifyDataHandler.artists.update({
                         artist_spotify_id: {
@@ -52,7 +53,8 @@ class SpotifyDataHandler:
         def find_or_create_album(self, album_data: dict):
             album_spotify_id: str = album_data['id']
             if album_spotify_id in SpotifyDataHandler.albums:
-                album = SpotifyDataHandler.albums[album_spotify_id]['obj']
+                pass
+                #album = SpotifyDataHandler.albums[album_spotify_id]['obj']
             else:
                 if AlbumModel.objects.filter(link=f'https://open.spotify.com/album/{album_spotify_id}').exists():
                     album = AlbumModel.objects.filter(link=f'https://open.spotify.com/album/{album_spotify_id}').only('id', 'link')[0]
