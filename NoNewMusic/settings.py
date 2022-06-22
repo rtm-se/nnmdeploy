@@ -121,7 +121,7 @@ DATABASES = {
         'NAME': 'nonewmusic',
         'USER': 'postgres',
         'PASSWORD': 'TWERQENNETPLAY',
-        'HOST': '195.246.120.39',
+        'HOST': 'nonewmusicdb.ddns.net',
         'PORT': '42992',
     }
 }
