@@ -104,27 +104,27 @@ DATABASES = {
 }
 
 '''
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbibq3v9go3u6i',
-        'USER': 'uplkoeowbylnds',
-        'PASSWORD': 'ae8a486eeda7bb8d8da50585a94be48761240b203523a7610cca17f6a0bc700e',
-        'HOST': 'ec2-176-34-211-0.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432',
-    }
-}
+#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'nonewmusic',
-#         'USER': 'postgres',
-#         'PASSWORD': 'TWERQENNETPLAY',
-#         'HOST': '127.0.0.1',
-#         'PORT': '1212',
+#         'NAME': 'dbibq3v9go3u6i',
+#         'USER': 'uplkoeowbylnds',
+#         'PASSWORD': 'ae8a486eeda7bb8d8da50585a94be48761240b203523a7610cca17f6a0bc700e',
+#         'HOST': 'ec2-176-34-211-0.eu-west-1.compute.amazonaws.com',
+#         'PORT': '5432',
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'nonewmusic',
+        'USER': 'postgres',
+        'PASSWORD': 'TWERQENNETPLAY',
+        'HOST': '195.246.120.39',
+        'PORT': '42992',
+    }
+}
 
 
 
