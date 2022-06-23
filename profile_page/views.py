@@ -722,7 +722,7 @@ def show_albums_list(request, page, pk):
     user = User.objects.get(id=pk)
     if page == 'new':
 
-        albums = models.EncounteredAlbumModel.objects.select_related('album').filter(
+        albums = models.EncounteredAlbumModel.objects.select_related('album').prefetch_related('album__artist_name').filter(
             user=user,
             album__release_date__gte=datetime.date(2020, 1, 1),
             album__album_type='album',
