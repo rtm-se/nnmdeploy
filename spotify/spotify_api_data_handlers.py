@@ -3,13 +3,12 @@ from .api_call_to_model import create_song_model, create_artists_model, create_a
 
 
 class SpotifyDataHandler:
-    artists: dict = {}
-    albums: dict = {}
-    songs: dict = {}
+
 
     class SpotifyDataNode:
 
-        def __init__(self, data: dict, item_type: str):
+        def __init__(self, data: dict, item_type: str, parent: 'SpotifyDataHandler'):
+            self.parent = parent
             self.data: dict = data
             self.item_type: str = item_type
             self.item_id: str = data['id']
@@ -26,7 +25,7 @@ class SpotifyDataHandler:
 
         def find_or_create_artist(self, artist_data: dict):
             artist_spotify_id = artist_data['id']
-            if artist_spotify_id in SpotifyDataHandler.artists:
+            if artist_spotify_id in self.parent.artists:
                 pass
                 #artist = SpotifyDataHandler.artists[artist_spotify_id]['obj']
             else:
@@ -34,7 +33,7 @@ class SpotifyDataHandler:
                 if ArtistModel.objects.filter(spotify_id=artist_spotify_id).exists():
                     artist = ArtistModel.objects.get(spotify_id=artist_spotify_id)
 
-                    SpotifyDataHandler.artists.update({
+                    self.parent.artists.update({
                         artist_spotify_id: {
                             'obj': artist,
                             'new': False
@@ -42,7 +41,7 @@ class SpotifyDataHandler:
                     })
                 else:
                     artist = create_artists_model(artist_data)
-                    SpotifyDataHandler.artists.update({
+                    self.parent.artists.update({
                         artist_spotify_id: {
                             'obj': artist,
                             'new': True
@@ -52,20 +51,20 @@ class SpotifyDataHandler:
 
         def find_or_create_album(self, album_data: dict):
             album_spotify_id: str = album_data['id']
-            if album_spotify_id in SpotifyDataHandler.albums:
+            if album_spotify_id in self.parent.albums:
                 pass
                 #album = SpotifyDataHandler.albums[album_spotify_id]['obj']
             else:
                 if AlbumModel.objects.filter(spotify_id=album_spotify_id).exists():
                     album = AlbumModel.objects.get(spotify_id=album_spotify_id)
-                    SpotifyDataHandler.albums.update({
+                    self.parent.albums.update({
                         album_spotify_id: {
                             'obj': album,
                             'new': False
                         }})
                 else:
                     album = create_album_mode(album_data)
-                    SpotifyDataHandler.albums.update({
+                    self.parent.albums.update({
                         album_spotify_id: {
                             'obj': album,
                             'new': True
@@ -76,13 +75,13 @@ class SpotifyDataHandler:
 
         def find_or_create_song(self, song_data):
             song_spotify_id: str = song_data['id']
-            if song_spotify_id in SpotifyDataHandler.songs:
-                song = SpotifyDataHandler.songs[song_spotify_id]['obj']
+            if song_spotify_id in self.parent.songs:
+                song = self.parent.songs[song_spotify_id]['obj']
             else:
                 # Checking if the song with spotify exists in the db
                 if SongModel.objects.filter(spotify_id=song_spotify_id).exists():
                     song = SongModel.objects.get(spotify_id=song_spotify_id)
-                    SpotifyDataHandler.songs.update({
+                    self.parent.songs.update({
                         song_spotify_id: {
                             'obj': song,
                             'new': False
@@ -90,7 +89,7 @@ class SpotifyDataHandler:
                 else:
                     # if everything else fails we create new model object
                     song = create_song_model(song_data)
-                    SpotifyDataHandler.songs.update({
+                    self.parent.songs.update({
                         song_spotify_id: {
                             'obj': song,
                             'new': True
@@ -105,6 +104,9 @@ class SpotifyDataHandler:
         # Get the data
 
         # Supporting lists for storing new models
+        self.artists: dict = {}
+        self.albums: dict = {}
+        self.songs: dict = {}
         self.new_models_artists: list = []
         self.new_models_albums: list = []
         self.new_models_songs: list = []
@@ -114,7 +116,7 @@ class SpotifyDataHandler:
         self.nodes: list = []
         # Sort the data into nodes
         for item in data_set:
-            self.nodes.append(self.SpotifyDataNode(item, data_type))
+            self.nodes.append(self.SpotifyDataNode(item, data_type, parent=self))
         # Check for creating new models
         self.create_mew_models()
         # Check for creating new connections on items
@@ -127,9 +129,9 @@ class SpotifyDataHandler:
                 if models_list[item]['new']:
                     storing_list.append(models_list[item]['obj'])
 
-        find_new_nodes(SpotifyDataHandler.songs, self.new_models_songs)
-        find_new_nodes(SpotifyDataHandler.albums, self.new_models_albums)
-        find_new_nodes(SpotifyDataHandler.artists, self.new_models_artists)
+        find_new_nodes(self.songs, self.new_models_songs)
+        find_new_nodes(self.albums, self.new_models_albums)
+        find_new_nodes(self.artists, self.new_models_artists)
 
         if self.new_models_songs:
             SongModel.objects.bulk_create(self.new_models_songs)
@@ -159,32 +161,32 @@ class SpotifyDataHandler:
                 pass
             elif node.item_type == 'album':
                 # If the item type is album we have to check for each artist mtm
-                if SpotifyDataHandler.albums[node.item_id]['new']:
+                if self.albums[node.item_id]['new']:
                     for pk in node.album_artists_ids:
                         album_artists_mtm.append(AlbumArtistMtM(
-                            artistmodel_id=SpotifyDataHandler.artists[pk]['obj'].id,
-                            albummodel_id=SpotifyDataHandler.albums[node.item_id]['obj'].id
+                            artistmodel_id=self.artists[pk]['obj'].id,
+                            albummodel_id=self.albums[node.item_id]['obj'].id
                         ))
 
             elif node.item_type == 'song':
                 # if the song is just created check if the album just created too and update everything
-                if SpotifyDataHandler.songs[node.item_id]['new']:
-                    if SpotifyDataHandler.albums[node.album_id]['new']:
+                if self.songs[node.item_id]['new']:
+                    if self.albums[node.album_id]['new']:
                         for pk in node.album_artists_ids:
                             # TODO create a dictionarry of ids that will show if the object already appended to the album or song
                                 album_artists_mtm.append(AlbumArtistMtM(
-                                    artistmodel_id=SpotifyDataHandler.artists[pk]['obj'].id,
-                                    albummodel_id=SpotifyDataHandler.albums[node.album_id]['obj'].id
+                                    artistmodel_id=self.artists[pk]['obj'].id,
+                                    albummodel_id=self.albums[node.album_id]['obj'].id
                                 ))
                     # check if there are no such connections before made in this cycle
-                    SpotifyDataHandler.songs[node.item_id]['obj'].album = SpotifyDataHandler.albums[node.album_id][
+                    self.songs[node.item_id]['obj'].album = self.albums[node.album_id][
                         'obj']
-                    song_album_fk.append(SpotifyDataHandler.songs[node.item_id]['obj'])
+                    song_album_fk.append(self.songs[node.item_id]['obj'])
 
                     for artist_id in node.song_artists_ids:
                         song_artists_mtm.append(SongArtistMtM(
-                            artistmodel_id=SpotifyDataHandler.artists[artist_id]['obj'].id,
-                            songmodel_id=SpotifyDataHandler.songs[node.item_id]['obj'].id
+                            artistmodel_id=self.artists[artist_id]['obj'].id,
+                            songmodel_id=self.songs[node.item_id]['obj'].id
                         ))
 
         SongArtistMtM.objects.bulk_create(song_artists_mtm)

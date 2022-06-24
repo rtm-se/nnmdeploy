@@ -88,7 +88,8 @@ def spotify_grab_tha_link(request):
 @login_required(login_url='login:login')
 def testing_new_data_update(request):
     Thread(target=get_recent_tracks, args=(request.user, )).start()
-    return render(request, 'spotify/get_recent_album.html')
+    return HttpResponse(' <button class="btn btn-primary" type="button" disabled >Your data being upgraded</button>')
+    #return render(request, 'spotify/get_recent_album.html')
 
 
 @login_required(login_url='login:login')
