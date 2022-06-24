@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'login.apps.LoginConfig',
     'profile_page.apps.ProfilePageConfig',
     'testapp.apps.TestappConfig',
+    #'django_fastdev',
     #'debug_toolbar'
 ]
 
@@ -125,6 +126,16 @@ DATABASES = {
         'PORT': '42992',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'nonewmusic',
+#         'USER': 'postgres',
+#         'PASSWORD': 'TWERQENNETPLAY',
+#         'HOST': '127.0.0.1',
+#         'PORT': '42992',
+#     }
+# }
 
 
 

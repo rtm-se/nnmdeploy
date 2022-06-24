@@ -1,0 +1,45 @@
+<div class="row row justify-content-center">
+    {% for album in page_obj.object_list %}
+
+
+
+<div class="card {% if page == 'new' and album.completion == 100 %}border-warning text-warning{% endif %} text-center" style="width: 18rem;" {% if page == 'recommendation' %}hx-target="this" hx-swap="outerHTML swap:0.3s" id="album_card" {% endif %}>
+  <div class="card-img">
+  <a href="{% url 'main_page:album_details' album.id%}"><img src="{{album.cover300}}" class="img-fluid" alt="No_Photo"></a>
+    </div>
+    <div class="card-body">
+    <h5 class="card-title">{{album.name}}</h5>
+    <p class="card-text">
+      {% for artist in album.artist_name.all %}
+      {{artist}}
+      {% endfor %}<br>
+      {% if page == 'new' %}
+      {{ album.completion }}% completion
+      {% endif %}
+     </p>
+      {%if page == 'recommendation' %}
+            <button class="btn btn-danger" hx-get="{% url 'profile:delete_recommendation_item' album.album.id %}">
+          Delete
+        </button>
+      {% endif %}
+      {% if page == 'like' and pk == request.user.id  %}
+    <a href="{% url 'profile:make_fav' album.id %}" class="btn btn-primary">make it your obsession</a>
+      {% endif %}
+    <a href="{{album.link}}" class="btn btn-success">listen on spotify</a>
+  </div>
+</div>
+
+    {% endfor %}
+
+</div>
+{% if page_obj.has_next %}
+    <div hx-get="?page_n={{page_obj.next_page_number}}&page=new"
+    hx-trigger="revealed"
+    hx-swap="outerHTML">
+                    <div class="row justify-content-center">
+            <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+            </div>
+            </div>
+    </div>
+{% endif %}
