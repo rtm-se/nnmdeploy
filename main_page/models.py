@@ -4,7 +4,7 @@ from django.db import models
 
 
 class ArtistModel(models.Model):
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200, unique=False)
     artist_link = models.CharField(max_length=200)
     genres = models.CharField(max_length=300, blank=True, null=True)
     spotify_id = models.CharField(max_length=50, blank=True)
@@ -23,7 +23,7 @@ class UpcomingAlbumEntryModel(models.Model):
         related_query_name='Upcoming_album',
     )
     #artist_name = models.CharField(max_length=50)
-    album_name = models.CharField(max_length=50, unique=True)
+    album_name = models.CharField(max_length=50, unique=False)
     release_date = models.DateField()
     description = models.TextField(max_length=200, blank=True, null=True)
     cover = models.ImageField(null=True, default='cover.jfif')
@@ -69,7 +69,7 @@ class AlbumModel(models.Model):
         related_name='albums',
         related_query_name='album',
     )
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200, unique=False)
     cover64 = models.CharField(max_length=150)
     cover300 = models.CharField(max_length=150)
     cover640 = models.CharField(max_length=150)
