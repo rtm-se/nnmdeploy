@@ -885,7 +885,7 @@ def albums_view(request, pk):
                     album__id=OuterRef('id'),
                     user=user
                 ).values('completion')
-            ))
+            )).order_by('-completion')
 
         if page == 'like':
             albums = albums.exclude(like__visible=False)

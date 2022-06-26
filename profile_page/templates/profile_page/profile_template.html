@@ -19,7 +19,7 @@
             <br>
             <br>
             <a href="{% url 'profile:connections'%}">Account Connections</a><br>
-            <!---<a href="{% url 'spotify:test_data_update'%}">testing data update</a><br>-->
+
         </div>
         <div class="col-md-4">
             {% if profile.favorite_album != Null %}
@@ -38,7 +38,7 @@
             <div class="d-flex justify-content-between">
 
                 <a class="link-dark text-decoration-none" href="{% url 'profile:albums_liked' profile.user.id %}">Likes</a>
-                <a class="link-dark text-decoration-none" href="{% url 'profile:albums_listened' profile.user.id %}">Encountered albums</a>
+                <a class="link-dark text-decoration-none" href="{% url 'profile:albums_listened' profile.user.id %}?page=new">Encountered albums</a>
                 <a class="link-dark text-decoration-none" href="{% url 'profile:songs_listened' profile.user.id %}">Last played songs</a>
                 <a class="link-dark text-decoration-none" href="{% url 'profile:all_reviews' profile.user.id %}">Reviews</a>
                 <a class="link-dark text-decoration-none" href="{% url 'profile:wl' profile.user.id %}">Waiting list</a>
@@ -59,11 +59,12 @@
         <div class="col-md-4 offset-md-1">
             {% if  request.user == profile.user and user.is_staff %}
                 <h5>Test Features</h5><br>
-                <!--<a class="link-dark text-decoration-none" href="{% url 'spotify:rip_likes' %}">rip likes</a><br>-->
-                <a class="link-dark text-decoration-none" href="{% url 'spotify:get_saved_songs' %}">new rip likes</a><br>
 
+                <a class="link-dark text-decoration-none" href="{% url 'spotify:get_saved_songs' %}">rip likes</a><br>
+                <!--
                 <a class="link-dark text-decoration-none" href="{% url 'spotify:rip_albums' %}">rip albums</a><br>
                 <a class="link-dark text-decoration-none" href="{% url 'spotify:rip_followed' %}">rip artists</a><br>
+                -->
                 <br>
                 <p class="text-danger">!!CHANGE SPOTIFY USER BEFORE!!</p>
                 <a class="link-dark text-decoration-none" href="{% url 'spotify:record_likes' %}">record likes</a><br>
