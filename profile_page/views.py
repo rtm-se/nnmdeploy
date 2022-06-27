@@ -886,16 +886,20 @@ def albums_view(request, pk):
                     user=user
                 ).values('completion')
             )).order_by('-completion')
-
+            page_type = 'new'
+            if request.GET.get('select_value') == '100' or request.POST.get('select_value') == '100':
+                albums = albums.exclude(completion__lt=100)
+            if request.GET.get('select_value') == '99' or request.POST.get('select_value') == '99':
+                albums = albums.exclude(completion=100)
         if page == 'like':
-            albums = albums.exclude(like__visible=False)
-
+            albums = albums.filter(like__user=user, like__visible=True)
+            page_type = 'like'
         paginator = Paginator(albums, 12)
         page_n = request.GET.get('page_n')
         page_obj = paginator.page(page_n)
         context = {
             'page_obj': page_obj,
-            'page': 'new'
+            'page': page_type
         }
         return render(request, 'profile_page/test_albums.html', context)
 
