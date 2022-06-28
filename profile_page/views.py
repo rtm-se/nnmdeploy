@@ -92,7 +92,7 @@ def liked_albums_views(request, pk):
 
 
 def like_view(request, pk):
-    context :dict = {}
+    context: dict = {}
     album = get_object_or_404(models.AlbumModel, id=pk)
     if not request.user.is_authenticated:
         context.update({
@@ -916,16 +916,17 @@ def full_db_view(request):
         }
         return render(request, 'profile_page/albums_list.html', context)
     else:
+        print(request.GET)
         albums = AlbumModel.objects.prefetch_related('artist_name').filter(
             release_date__gte=datetime.date(2020, 1, 1),
             album_type='album'
         ).distinct().order_by('-release_date')
         paginator = Paginator(albums, 12)
         page_n = request.GET.get('page_n')
-        page_obj = paginator.get_page('page_n')
+        page_obj = paginator.get_page(page_n)
         context = {
             'page_obj': page_obj,
-            'page': 'all_albums',
+            'page': 'all_albums'
         }
         return render(request, 'profile_page/test_albums.html', context)
 
