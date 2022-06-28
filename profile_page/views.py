@@ -912,7 +912,7 @@ def full_db_view(request):
     if not 'page_n' in request.GET:
         context = {
             'page': 'all_albums',
-            'pk': 0
+            'pk': 1
         }
         return render(request, 'profile_page/albums_list.html', context)
     else:
@@ -928,3 +928,4 @@ def full_db_view(request):
             'page': 'all_albums',
         }
         return render(request, 'profile_page/test_albums.html', context)
+
