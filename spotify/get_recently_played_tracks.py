@@ -1,3 +1,5 @@
+import logging
+
 import requests
 
 from .util import is_spotify_authenticated
@@ -11,6 +13,8 @@ AFTER = 1484811043508
 
 
 def get_recent_tracks(user):
+    logging.basicConfig(level=logging.INFO)
+    logging.info(f'getting recent tracks for {user}')
     # Check/update the expiration for tokens
     # Verify auth
     is_spotify_authenticated(user)
@@ -23,6 +27,7 @@ def get_recent_tracks(user):
     # Clean up already processed data
     new_data = clean_up_data_with_date(response_data, user)
     if not new_data:
+        logging.info(f'end of recent songs for {user} no new data')
         return True
     # Feed the data to handler to create missing models
     # Making sure to feed data handler only songs objects
@@ -31,6 +36,7 @@ def get_recent_tracks(user):
     # create listened_songs and encountered_albums entries
     create_listened_songs(new_data, user, spotify_dh.songs)
     add_new_encountered_albums(spotify_dh.albums, user)
+    logging.info(f'end of recent songs for {user} with updates')
     return True
 
 
