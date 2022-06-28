@@ -37,8 +37,8 @@
             <br>
             <div class="d-flex justify-content-between">
 
-                <a class="link-dark text-decoration-none" href="{% url 'profile:albums_liked' profile.user.id %}?page=like">Likes</a>
-                <a class="link-dark text-decoration-none" href="{% url 'profile:albums_listened' profile.user.id %}?page=new">Encountered albums</a>
+                <a class="link-dark text-decoration-none" href="{% url 'profile:albums' 'albums_liked' profile.user.id %}">Likes</a>
+                <a class="link-dark text-decoration-none" href="{% url 'profile:albums' 'albums_listened' profile.user.id %}">Encountered albums</a>
                 <a class="link-dark text-decoration-none" href="{% url 'profile:songs_listened' profile.user.id %}">Last played songs</a>
                 <a class="link-dark text-decoration-none" href="{% url 'profile:all_reviews' profile.user.id %}">Reviews</a>
                 <a class="link-dark text-decoration-none" href="{% url 'profile:wl' profile.user.id %}">Waiting list</a>

@@ -7,8 +7,8 @@ urlpatterns = [
     path('connections/', views.connection_view, name='connections'),
     #todo come up with the less obvious link
     path('songs_listened/<int:pk>/', views.listened_songs_views, name='songs_listened'),
-    path('albums_listened/<int:pk>', views.albums_view, name='albums_listened'),
-    path('albums_liked/<int:pk>', views.albums_view, name='albums_liked'),
+    path('<str:page>/<int:pk>', views.albums_view, name='albums'),
+    #path('<str:page>/<int:pk>', views.albums_view, name='albums_liked'),
     # path('albums_liked/<int:pk>', views.liked_albums_views, name='albums_liked'),
     path('all_new_albums/', views.full_db, name='full_db'),
     path('post_review/<int:pk>', views.post_review, name='post_review'),

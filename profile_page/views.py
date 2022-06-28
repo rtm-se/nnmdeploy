@@ -843,29 +843,27 @@ def delete_profile_data(request):
     return render(request, 'profile_page/delete_profile.html', context)
 
 
-
-def albums_view(request, pk):
-    # Function view responsible for render of all albums lists except for full db album
+def albums_view(request, page, pk):
+    # Function view responsible for render of albums lists on likes and encountered pages
     # Getting user object to search for albums and check permissions
+    print(page)
     try:
         user = User.objects.get(id=pk)
     except:
         # TODO add more strict exception claws and show this page only if you can't find a user
         return render(request, 'profile_page/private_page.html')
     # Checking visibility of the page
-    page = request.GET.get('page')
+
     visibility: bool = bool()
-    if page == 'new':
+    if page == 'albums_listened':
         visibility = user.profile.encountered_visibility
-    elif page == 'like':
+    elif page == 'albums_liked':
         visibility = user.profile.likes_visibility
     if not visibility and user != request.user:
         return render(request, 'profile_page/private_page.html')
 
-
     # Rendering the base page if there's no pagintor's n of page
     if not 'page_n' in request.GET:
-        page_type = request.GET.get('page')
         context = {
             'pk': pk,
             'page': page
@@ -873,103 +871,39 @@ def albums_view(request, pk):
         return render(request, 'profile_page/albums_list.html', context)
     else:
         print(request.GET)
-        # collecting data to give out list page
-        albums = AlbumModel.objects.prefetch_related('artist_name').filter(
-            encountered_user__user=user,
-            release_date__gte=datetime.date(2020, 1, 1),
-            album_type='album',
-        )
-        if page == 'new':
-            albums = albums.exclude(encountered_user__visible=False).annotate(completion=Subquery(
+        context: dict = dict()
+        if page == 'albums_listened':
+            albums = AlbumModel.objects.prefetch_related('artist_name').filter(
+                encountered_user__user=user,
+                release_date__gte=datetime.date(2020, 1, 1),
+                album_type='album',
+                encountered_user__visible=True).distinct().annotate(completion=Subquery(
                 models.EncounteredAlbumModel.objects.filter(
-                    album__id=OuterRef('id'),
-                    user=user
+                album__id=OuterRef('id'),
+                user=user
                 ).values('completion')
             )).order_by('-completion')
-            page_type = 'new'
-            if request.GET.get('select_value') == '100' or request.POST.get('select_value') == '100':
-                albums = albums.exclude(completion__lt=100)
-            if request.GET.get('select_value') == '99' or request.POST.get('select_value') == '99':
-                albums = albums.exclude(completion=100)
-        if page == 'like':
-            albums = albums.filter(like__user=user, like__visible=True)
-            page_type = 'like'
+            if 'select_value' in request.GET:
+                if request.GET.get('select_value') == '100' or request.POST.get('select_value') == '100':
+                    albums = albums.exclude(completion__lt=100)
+                elif request.GET.get('select_value') == '99' or request.POST.get('select_value') == '99':
+                    albums = albums.exclude(completion=100)
+
+                context.update({'select_value': request.GET.get('select_value')})
+        if page == 'albums_liked':
+            albums = AlbumModel.objects.filter(
+                album_type='album',
+                like__user=user,
+                like__visible=True)
         paginator = Paginator(albums, 12)
         page_n = request.GET.get('page_n')
         page_obj = paginator.page(page_n)
-        context = {
+        context.update({
             'page_obj': page_obj,
-            'page': page_type
-        }
+            'page': page
+        })
         return render(request, 'profile_page/test_albums.html', context)
 
 
 #CompetitionTeam.objects.filter(competition_id=_competition.id,team_id__in=joined_team_ids).annotate(name=Subquery(Team.objects.filter(id=OuterRef('team_id')).values('name')))
 
-
-
-def show_albums_list(request, page, pk):
-    user = User.objects.get(id=pk)
-    if page == 'new':
-
-        albums = AlbumModel.objects.prefetch_related('artist_name').filter(
-            encountered_user__user=user,
-            release_date__gte=datetime.date(2020, 1, 1),
-            encountered_user__visible=True,
-            album_type='album',
-        )
-        paginator = Paginator(albums, 12)
-        if request.method == 'GET' and 'page_n' in request.GET:
-            page_number = request.GET.get('page_n')
-            page_obj = paginator.page(page_number)
-            context = {
-                'page_obj': page_obj
-            }
-            return render(request, 'profile_page/test_albums.html', context)
-        # albums = models.EncounteredAlbumModel.objects.select_related('album').prefetch_related('album__artist_name').filter(
-        #     user=user,
-        #     album__release_date__gte=datetime.date(2020, 1, 1),
-        #     album__album_type='album',
-        #     visible=True
-        # ).order_by('-completion')
-        # Checking for owner of the list and updating completion
-        if user == request.user:
-            for album in albums:
-                album.get_song_completion()
-
-        if request.GET.get('select_value') == '100' or request.POST.get('select_value') == '100':
-
-            albums = albums.exclude(completion__lt=100)
-        if request.GET.get('select_value') == '99' or request.POST.get('select_value') == '99':
-
-            albums = albums.exclude(completion=100)
-    elif page == 'like':
-        albums = models.LikeModel.objects.filter(user=user, visible=True)
-    elif page == 'recommendation':
-        albums = models.RecommendationModel.objects.filter(user=user)
-    else:
-        albums = models.EncounteredAlbumModel.objects.filter(album__release_date__gte=datetime.date(2020, 1, 1),
-                                                             album__album_type='album')
-
-    if request.method == 'POST':
-        if not request.user.is_authenticated:
-            return redirect('login:login')
-        playlist_creator = PlaylistCreationHandler(
-            user=request.user,
-            albums=albums,
-            shuffle_check=request.POST.get('shuffle'),
-            page=page
-        )
-        playlist_link = playlist_creator.playlist_link
-        context = {
-            'playlist_link': playlist_link
-        }
-        return render(request, 'profile_page/list_success.html', context)
-
-
-    context = {
-        'pk': pk,
-        'page': page,
-        'albums': albums
-    }
-    return render(request, 'profile_page/albums_list_list.html', context)
