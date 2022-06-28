@@ -163,13 +163,13 @@ def full_db(request):
 
 @login_required(login_url='login:login')
 def visibility_view(request, page):
-    if page == 'new':
-        albums = models.EncounteredAlbumModel.objects.filter(
+    if page == 'albums_listened':
+        albums = models.EncounteredAlbumModel.objects.select_related('album').filter(
             user=request.user,
             album__release_date__gte=datetime.date(2020, 1, 1),
             album__album_type='album'
         )
-    elif page == 'like':
+    elif page == 'albums_liked':
         albums = models.LikeModel.objects.filter(
             user=request.user
         )
@@ -594,10 +594,10 @@ def live_search_visibility(request, page):
     if request.method == 'POST':
         user = request.user
         q = request.POST.get('search')
-        if page == 'new':
-            albums = models.EncounteredAlbumModel.objects.filter(user=user, album__name__icontains=q)
-        elif page == 'like':
-            albums = models.LikeModel.objects.filter(user=user, album__name__icontains=q)
+        if page == 'albums_listened':
+            albums = models.EncounteredAlbumModel.objects.select_related('album').filter(user=user, album__name__icontains=q)
+        elif page == 'albums_liked':
+            albums = models.LikeModel.objects.select_related('album').filter(user=user, album__name__icontains=q)
         context = {
             'page': page,
             'albums': albums
@@ -907,3 +907,24 @@ def albums_view(request, page, pk):
 
 #CompetitionTeam.objects.filter(competition_id=_competition.id,team_id__in=joined_team_ids).annotate(name=Subquery(Team.objects.filter(id=OuterRef('team_id')).values('name')))
 
+def full_db_view(request):
+    # Function view to render full db and it's pages
+    if not 'page_n' in request.GET:
+        context = {
+            'page': 'all_albums',
+            'pk': 0
+        }
+        return render(request, 'profile_page/albums_list.html', context)
+    else:
+        albums = AlbumModel.objects.prefetch_related('artist_name').filter(
+            release_date__gte=datetime.date(2020, 1, 1),
+            album_type='album'
+        ).distinct().order_by('-release_date')
+        paginator = Paginator(albums, 12)
+        page_n = request.GET.get('page_n')
+        page_obj = paginator.get_page('page_n')
+        context = {
+            'page_obj': page_obj,
+            'page': 'all_albums',
+        }
+        return render(request, 'profile_page/test_albums.html', context)

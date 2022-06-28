@@ -116,26 +116,26 @@ DATABASES = {
 #         'PORT': '5432',
 #     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'nonewmusic',
-        'USER': 'postgres',
-        'PASSWORD': 'TWERQENNETPLAY',
-        'HOST': 'nonewmusicdb.ddns.net',
-        'PORT': '59399',
-    }
-}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': 'nonewmusic',
 #         'USER': 'postgres',
 #         'PASSWORD': 'TWERQENNETPLAY',
-#         'HOST': '127.0.0.1',
-#         'PORT': '42992',
+#         'HOST': 'nonewmusicdb.ddns.net',
+#         'PORT': '59399',
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'nonewmusic',
+        'USER': 'postgres',
+        'PASSWORD': 'TWERQENNETPLAY',
+        'HOST': '127.0.0.1',
+        'PORT': '59399',
+    }
+}
 
 
 
