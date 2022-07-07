@@ -18,7 +18,7 @@
 <div class="row justify-content-center" id="albums">
   {% for album in albums %}
 
-<div class="card {% if page == 'new' and album.completion == 100 %}border-warning text-warning{% endif %} text-center" style="width: 18rem;" {% if page == 'recommendation' %}hx-target="this" hx-swap="outerHTML swap:0.3s" id="album_card" {% endif %}>
+<div class="card {% if page == 'albums_listened' and album.completion == 100 %}border-warning text-warning{% endif %} text-center" style="width: 18rem;" {% if page == 'recommendation' %}hx-target="this" hx-swap="outerHTML swap:0.3s" id="album_card" {% endif %}>
   <div class="card-img">
   <a href="{% url 'main_page:album_details' album.album.id%}"><img src="{{album.album.cover300}}" class="img-fluid" alt="No_Photo"></a>
     </div>
@@ -28,7 +28,7 @@
       {% for artist in album.album.artist_name.all %}
       {{artist}}
       {% endfor %}<br>
-      {% if page == 'new' %}
+      {% if page == 'albums_listened' %}
       {{ album.completion }}% completion
       {% endif %}
      </p>
@@ -37,7 +37,7 @@
           Delete
         </button>
       {% endif %}
-      {% if page == 'like' and pk == request.user.id  %}
+      {% if page == 'albums_liked' and pk == request.user.id  %}
     <a href="{% url 'profile:make_fav' album.album.id %}" class="btn btn-primary">make it your obsession</a>
       {% endif %}
     <a href="{{album.album.link}}" class="btn btn-success">listen on spotify</a>

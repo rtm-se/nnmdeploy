@@ -26,8 +26,7 @@ class SpotifyDataHandler:
         def find_or_create_artist(self, artist_data: dict):
             artist_spotify_id = artist_data['id']
             if artist_spotify_id in self.parent.artists:
-                pass
-                #artist = SpotifyDataHandler.artists[artist_spotify_id]['obj']
+                return artist_spotify_id
             else:
 
                 if ArtistModel.objects.filter(spotify_id=artist_spotify_id).exists():
@@ -52,7 +51,7 @@ class SpotifyDataHandler:
         def find_or_create_album(self, album_data: dict):
             album_spotify_id: str = album_data['id']
             if album_spotify_id in self.parent.albums:
-                pass
+                return album_spotify_id
                 #album = SpotifyDataHandler.albums[album_spotify_id]['obj']
             else:
                 if AlbumModel.objects.filter(spotify_id=album_spotify_id).exists():
@@ -99,6 +98,10 @@ class SpotifyDataHandler:
                         self.song_artists_ids.append(self.find_or_create_artist(artist_data))
                     # find songs
                     self.album_id = self.find_or_create_album(song_data['album'])
+
+        def __str__(self):
+            return f'item id {self.item_id}, album id {self.album_id}, artist ids album {self.album_artists_ids}, song artists ids {self.song_artists_ids}'
+
 
     def __init__(self, data_set: list, data_type: str):
         # Get the data
@@ -156,6 +159,7 @@ class SpotifyDataHandler:
         SongArtistMtM = SongModel.artist.through
 
         for node in self.nodes:
+            print(node)
             if node.item_type == 'artist':
                 # IF the item type is artist there's nothing to update on that model.
                 pass

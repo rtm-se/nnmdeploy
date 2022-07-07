@@ -24,8 +24,8 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{% url 'profile:profile' request.user.id %}">Profile Page</a></li>
-            <li><a class="dropdown-item" href="{% url 'profile:albums_liked' request.user.id %}">Likes</a></li>
-            <li><a class="dropdown-item" href="{% url 'profile:albums_listened' request.user.id %}">Encountered Albums</a></li>
+            <li><a class="dropdown-item" href="{% url 'profile:albums' 'albums_liked' request.user.id %}">Likes</a></li>
+            <li><a class="dropdown-item" href="{% url 'profile:albums' 'albums_listened' request.user.id %}">Encountered Albums</a></li>
             <li><a class="dropdown-item" href="{% url 'profile:wl' request.user.id %}">Waiting List</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'profile:edit_profile' %}">edit profile </a></li>

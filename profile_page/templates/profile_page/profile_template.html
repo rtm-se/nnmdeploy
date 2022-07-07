@@ -16,6 +16,7 @@
                 Sync Your Spotify Data
             </button><b class="htmx-indicator" id="loading_data"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></b>
 
+            <!--<a href="{% url 'spotify:test_data_update'%}">test update</a>-->
             <br>
             <br>
             <a href="{% url 'profile:connections'%}">Account Connections</a><br>
@@ -37,8 +38,8 @@
             <br>
             <div class="d-flex justify-content-between">
 
-                <a class="link-dark text-decoration-none" href="{% url 'profile:albums_liked' profile.user.id %}">Likes</a>
-                <a class="link-dark text-decoration-none" href="{% url 'profile:albums_listened' profile.user.id %}?page=new">Encountered albums</a>
+                <a class="link-dark text-decoration-none" href="{% url 'profile:albums' 'albums_liked' profile.user.id %}">Likes</a>
+                <a class="link-dark text-decoration-none" href="{% url 'profile:albums' 'albums_listened' profile.user.id %}">Encountered albums</a>
                 <a class="link-dark text-decoration-none" href="{% url 'profile:songs_listened' profile.user.id %}">Last played songs</a>
                 <a class="link-dark text-decoration-none" href="{% url 'profile:all_reviews' profile.user.id %}">Reviews</a>
                 <a class="link-dark text-decoration-none" href="{% url 'profile:wl' profile.user.id %}">Waiting list</a>

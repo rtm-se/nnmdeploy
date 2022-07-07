@@ -124,6 +124,7 @@ DATABASES = {
         'PASSWORD': 'TWERQENNETPLAY',
         'HOST': 'nonewmusicdb.ddns.net',
         'PORT': '31202',
+
     }
 }
 # DATABASES = {
@@ -133,7 +134,7 @@ DATABASES = {
 #         'USER': 'postgres',
 #         'PASSWORD': 'TWERQENNETPLAY',
 #         'HOST': '127.0.0.1',
-#         'PORT': '42992',
+#         'PORT': '31202',
 #     }
 # }
 
