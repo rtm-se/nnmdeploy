@@ -924,7 +924,7 @@ def show_albums_list(request, page, pk):
             return render(request, 'profile_page/test_albums.html', context)
         # albums = models.EncounteredAlbumModel.objects.select_related('album').prefetch_related('album__artist_name').filter(
         #     user=user,
-        #     album__release_date__gte=datetime.date(2020, 1, 1),
+        #     album__release_date__gte=datetime.date(2020, 1, 1),git ud
         #     album__album_type='album',
         #     visible=True
         # ).order_by('-completion')
