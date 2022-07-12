@@ -922,8 +922,53 @@ def full_db_view(request):
             album_type='album'
         ).distinct().order_by('-release_date')
         paginator = Paginator(albums, 12)
+<<<<<<< HEAD
+        if request.method == 'GET' and 'page_n' in request.GET:
+            page_number = request.GET.get('page_n')
+            page_obj = paginator.page(page_number)
+            context = {
+                'page_obj': page_obj
+            }
+            return render(request, 'profile_page/test_albums.html', context)
+        # albums = models.EncounteredAlbumModel.objects.select_related('album').prefetch_related('album__artist_name').filter(
+        #     user=user,
+        #     album__release_date__gte=datetime.date(2020, 1, 1),git ud
+        #     album__album_type='album',
+        #     visible=True
+        # ).order_by('-completion')
+        # Checking for owner of the list and updating completion
+        if user == request.user:
+            for album in albums:
+                album.get_song_completion()
+
+        if request.GET.get('select_value') == '100' or request.POST.get('select_value') == '100':
+
+            albums = albums.exclude(completion__lt=100)
+        if request.GET.get('select_value') == '99' or request.POST.get('select_value') == '99':
+
+            albums = albums.exclude(completion=100)
+    elif page == 'like':
+        albums = models.LikeModel.objects.filter(user=user, visible=True)
+    elif page == 'recommendation':
+        albums = models.RecommendationModel.objects.filter(user=user)
+    else:
+        albums = models.EncounteredAlbumModel.objects.filter(album__release_date__gte=datetime.date(2020, 1, 1),
+                                                             album__album_type='album')
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login:login')
+        playlist_creator = PlaylistCreationHandler(
+            user=request.user,
+            albums=albums,
+            shuffle_check=request.POST.get('shuffle'),
+            page=page
+        )
+        playlist_link = playlist_creator.playlist_link
+=======
         page_n = request.GET.get('page_n')
         page_obj = paginator.get_page(page_n)
+>>>>>>> 5bd5102a715b164fb9b6645eab2a046856503f18
         context = {
             'page_obj': page_obj,
             'page': 'all_albums'
