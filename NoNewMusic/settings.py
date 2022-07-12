@@ -26,17 +26,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(=*ys@)d5f0mlce_@t$jx(tjkb9)w$s_tc^8(=fo16@6+w7ioh'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = [
-    'www.nonewmusic.xyz',
-    '.nonewmusic.xyz',
-    '127.0.0.1',
-    '.vercel.app',
-    '.now.sh'
-]
+DEBUG = str(os.environ.get('DEBUG')) == '1'
+
+ALLOWED_HOSTS = []
+if not DEBUG:
+    ALLOWED_HOSTS += os.environ.get('ALLOWED_HOSTS')
+
+# ALLOWED_HOSTS = [
+#     'www.nonewmusic.xyz',
+#     '.nonewmusic.xyz',
+#     '127.0.0.1',
+#     '.vercel.app',
+#     '.now.sh'
+# ]
 
 
 
@@ -96,49 +101,18 @@ WSGI_APPLICATION = 'NoNewMusic.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-'''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
-'''
-#
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dbibq3v9go3u6i',
-#         'USER': 'uplkoeowbylnds',
-#         'PASSWORD': 'ae8a486eeda7bb8d8da50585a94be48761240b203523a7610cca17f6a0bc700e',
-#         'HOST': 'ec2-176-34-211-0.eu-west-1.compute.amazonaws.com',
-#         'PORT': '5432',
-#     }
-# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'nonewmusic',
-        'USER': 'postgres',
-        'PASSWORD': 'TWERQENNETPLAY',
-        'HOST': 'nonewmusicdb.ddns.net',
-        'PORT': '59399',
+        'NAME': os.environ.get('Name'),
+        'USER': os.environ.get('User'),
+        'PASSWORD': os.environ.get('Password'),
+        'HOST': os.environ.get('Host'),
+        'PORT': os.environ.get('Port'),
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'nonewmusic',
-#         'USER': 'postgres',
-#         'PASSWORD': 'TWERQENNETPLAY',
-#         'HOST': '127.0.0.1',
-#         'PORT': '59399',
-#     }
-# }
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
