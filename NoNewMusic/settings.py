@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import json
 import os.path
 """
 import django_heroku
@@ -31,9 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get('DEBUG')) == '1'
 
-ALLOWED_HOSTS = []
-if not DEBUG:
-    ALLOWED_HOSTS += os.environ.get('ALLOWED_HOSTS')
+ALLOWED_HOSTS = json.loads(os.environ.get('ALLOWED_HOSTS'))
 
 # ALLOWED_HOSTS = [
 #     'www.nonewmusic.xyz',
