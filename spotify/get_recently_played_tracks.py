@@ -36,6 +36,7 @@ def get_recent_tracks(user):
     # create listened_songs and encountered_albums entries
     create_listened_songs(new_data, user, spotify_dh.songs)
     add_new_encountered_albums(spotify_dh.albums, user)
+    update_encountered_completion(spotify_dh.albums, user)
     logging.warning(f'end of recent songs update for {user} with new data')
     return True
 
@@ -101,14 +102,23 @@ def add_new_encountered_albums(albums_dict: dict, user) -> None:
         user=user, album__spotify_id__in=albums_ids
     ).values_list('album__spotify_id', flat=True))
     unrecorded_ids = set(albums_ids) - set(recorded_ids)
+    logging.warning(unrecorded_ids)
     for album_id in unrecorded_ids:
         album = albums_dict[album_id]['obj']
         encountered_to_create.append(
             EncounteredAlbumModel(
                 user=user,
-                album=album,
-
+                album=album
             )
         )
 
     EncounteredAlbumModel.objects.bulk_create(encountered_to_create)
+
+
+def update_encountered_completion(data_handler_list: dict, user) -> bool:
+    if data_handler_list is None:
+        return False
+    encountered_albums = EncounteredAlbumModel.objects.filter(user=user, album__spotify_id__in=data_handler_list.keys())
+    for entry in encountered_albums:
+        entry.get_song_completion()
+    return True
