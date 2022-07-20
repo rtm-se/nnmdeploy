@@ -51,7 +51,8 @@ class SpotifyDataHandler:
         def find_or_create_album(self, album_data: dict):
             album_spotify_id: str = album_data['id']
             if album_spotify_id in self.parent.albums:
-                return album_spotify_id
+                # return album_spotify_id
+                pass
                 #album = SpotifyDataHandler.albums[album_spotify_id]['obj']
             else:
                 if AlbumModel.objects.filter(spotify_id=album_spotify_id).exists():
@@ -68,14 +69,15 @@ class SpotifyDataHandler:
                             'obj': album,
                             'new': True
                         }})
-                    for artist_data in album_data['artists']:
-                        self.album_artists_ids.append(self.find_or_create_artist(artist_data))
+            for artist_data in album_data['artists']:
+                self.album_artists_ids.append(self.find_or_create_artist(artist_data))
             return album_spotify_id
 
         def find_or_create_song(self, song_data):
             song_spotify_id: str = song_data['id']
             if song_spotify_id in self.parent.songs:
                 song = self.parent.songs[song_spotify_id]['obj']
+
             else:
                 # Checking if the song with spotify exists in the db
                 if SongModel.objects.filter(spotify_id=song_spotify_id).exists():
@@ -94,10 +96,10 @@ class SpotifyDataHandler:
                             'new': True
                         }})
                     # find artists
-                    for artist_data in song_data['artists']:
-                        self.song_artists_ids.append(self.find_or_create_artist(artist_data))
-                    # find songs
-                    self.album_id = self.find_or_create_album(song_data['album'])
+            for artist_data in song_data['artists']:
+                self.song_artists_ids.append(self.find_or_create_artist(artist_data))
+            # find songs
+            self.album_id = self.find_or_create_album(song_data['album'])
 
         def __str__(self):
             return f'item id {self.item_id}, album id {self.album_id}, artist ids album {self.album_artists_ids}, song artists ids {self.song_artists_ids}'
@@ -159,6 +161,7 @@ class SpotifyDataHandler:
         SongArtistMtM = SongModel.artist.through
 
         for node in self.nodes:
+            print('creating connection')
             print(node)
             if node.item_type == 'artist':
                 # IF the item type is artist there's nothing to update on that model.
@@ -183,6 +186,7 @@ class SpotifyDataHandler:
                                     albummodel_id=self.albums[node.album_id]['obj'].id
                                 ))
                     # check if there are no such connections before made in this cycle
+                        self.albums[node.album_id]['new'] = False
                     self.songs[node.item_id]['obj'].album = self.albums[node.album_id][
                         'obj']
                     song_album_fk.append(self.songs[node.item_id]['obj'])
@@ -192,6 +196,8 @@ class SpotifyDataHandler:
                             artistmodel_id=self.artists[artist_id]['obj'].id,
                             songmodel_id=self.songs[node.item_id]['obj'].id
                         ))
+                    self.songs[node.item_id]['new'] = False
+
 
         SongArtistMtM.objects.bulk_create(song_artists_mtm)
         AlbumArtistMtM.objects.bulk_create(album_artists_mtm)
