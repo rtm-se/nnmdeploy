@@ -15,6 +15,7 @@ from .models import SpotifyToken, SpotifyProfile
 from .spotify_request_script import dump_spotify_data
 from .create_playlist import create_playlist
 from .recommendations_requst_script import make_recommendations
+from .tasks import recent_tracks
 
 from .scrap_likes import rip_likes
 from .record_likes import record_likes
@@ -88,7 +89,8 @@ def spotify_grab_tha_link(request):
 @login_required(login_url='login:login')
 def testing_new_data_update(request):
     #get_recent_tracks(request.user)
-    Thread(target=get_recent_tracks, args=(request.user, ), daemon=True).start()
+    recent_tracks.delay(request.user)
+    #Thread(target=get_recent_tracks, args=(request.user, ), daemon=True).start()
     return HttpResponse(' <button class="btn btn-primary" type="button" disabled >Your data being updated</button>')
     #return render(request, 'spotify/get_recent_album.html')
 

@@ -192,4 +192,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-#django_heroku.settings(locals())
+# CELERY
+CELERY_BROKER_URL = os.environ.get('BROKER_URL')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
