@@ -4,7 +4,7 @@ import requests
 
 from .util import is_spotify_authenticated
 from .spotify_api_data_handlers import SpotifyDataHandler
-
+from django.contrib.auth.models import User
 from profile_page.models import ListenedSongsModel, EncounteredAlbumModel
 from main_page.models import SongModel, AlbumModel
 from spotify.models import SpotifyToken
@@ -12,7 +12,8 @@ from spotify.models import SpotifyToken
 AFTER = 1484811043508
 
 
-def get_recent_tracks(user):
+def get_recent_tracks(user_id):
+    user = User.objects.get(id=user_id)
     logging.basicConfig(level=logging.INFO)
     logging.warning(f'getting recent tracks for {user}')
     # Check/update the expiration for tokens
