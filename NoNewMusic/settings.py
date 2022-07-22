@@ -198,3 +198,11 @@ INTERNAL_IPS = [
 CELERY_BROKER_URL = os.environ.get('BROKER_URL')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+
+
+CELERY_BEAT_SCHEDULE = {
+    'periodic_task': {
+        'task': 'spotify.tasks.debug_spotify',
+        'schedule': 5.0,
+    },
+}
