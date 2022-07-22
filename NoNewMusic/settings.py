@@ -202,7 +202,7 @@ CELERY_TASK_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULE = {
     'periodic_task': {
-        'task': 'spotify.tasks.debug_spotify',
-        'schedule': 5.0,
+        'task': 'spotify.tasks.update_users_data',
+        'schedule': 3600.0,
     },
 }
