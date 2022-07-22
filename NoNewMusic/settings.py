@@ -52,14 +52,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #custom apps
+    # 3rd party apps
+    'django_celery_beat',
+    #'django_fastdev',
+    #'debug_toolbar',
+    # Custom apps
     'main_page.apps.MainPageConfig',
     'spotify.apps.SpotifyConfig',
     'login.apps.LoginConfig',
     'profile_page.apps.ProfilePageConfig',
     'testapp.apps.TestappConfig',
-    #'django_fastdev',
-    #'debug_toolbar'
 ]
 
 MIDDLEWARE = [

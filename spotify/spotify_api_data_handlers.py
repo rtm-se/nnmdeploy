@@ -30,7 +30,7 @@ class SpotifyDataHandler:
             else:
 
                 if ArtistModel.objects.filter(spotify_id=artist_spotify_id).exists():
-                    artist = ArtistModel.objects.get(spotify_id=artist_spotify_id)
+                    artist = ArtistModel.objects.filter(spotify_id=artist_spotify_id)[0]
 
                     self.parent.artists.update({
                         artist_spotify_id: {
