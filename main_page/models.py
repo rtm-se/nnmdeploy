@@ -27,6 +27,11 @@ class UpcomingAlbumEntryModel(models.Model):
     release_date = models.DateField()
     description = models.TextField(max_length=200, blank=True, null=True)
     cover = models.ImageField(null=True, default='cover.jfif')
+    cover_link = models.URLField(
+        blank=True,
+        default='https://uevicgzbyqusuokdtbwi.supabase.co/storage/v1/object/public/nnm-bucket/img_11809-1141319174.png',
+        max_length=400
+    )
     album = models.ForeignKey(
         'AlbumModel',
         on_delete=models.CASCADE,

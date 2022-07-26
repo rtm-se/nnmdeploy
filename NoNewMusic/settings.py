@@ -195,7 +195,7 @@ INTERNAL_IPS = [
 ]
 
 # CELERY
-CELERY_BROKER_URL = os.environ.get('BROKER_URL')
+CELERY_BROKER_URL = 'redis://:CVvdcDaBshOAv7E3UX6wspexVWR9uNLC@redis-19286.c135.eu-central-1-1.ec2.cloud.redislabs.com:19286'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
